@@ -6,7 +6,7 @@ services:
     image: reverseproxy
   backend_user:
     build:
-      context: ./udagram-api-user
+      context: ./udagram-api-users
     image: udagram-api-user
   backend_feed:
     build:
