@@ -1,11 +1,11 @@
 branches:
   only:
     - master
-    - dev
+    
 
 language: node_js
 node_js:
-  - 13
+  - 16
 
 services:
   - docker
@@ -19,18 +19,19 @@ before_script:
   - echo "no tests"
 
 script:
-  - docker build -t udagram-reverse-proxy:latest -f reverse-proxy/Dockerfile reverse-proxy/
-  - docker tag udagram-reverse-proxy:latest rofaeilashaiaa/udagram-reverse-proxy:latest
-  - docker build -t udagram-frontend:latest -f udagram-frontend/Dockerfile udagram-frontend/
-  - docker tag udagram-frontend:latest rofaeilashaiaa/udagram-frontend:latest
-  - docker build -t udagram-users-microservice:latest -f udagram-api/users-microservice/Dockerfile udagram-api/users-microservice/
-  - docker tag udagram-users-microservice:latest rofaeilashaiaa/udagram-users-microservice:latest
-  - docker build -t udagram-feed-microservice:latest -f udagram-api/feed-microservice/Dockerfile udagram-api/feed-microservice/
-  - docker tag udagram-feed-microservice:latest rofaeilashaiaa/udagram-feed-microservice:latest
+  - docker build -t udagram-api-feed ./udagram-api-feed
+  - docker tag udagram-api-feed ibrmostafa/udagram-api-feed:v1
+  - docker build -t udagram-api-user ./udagram-api-users
+  - docker tag udagram-api-user ibrmostafa/udagram-api-user:v1
+  - docker build -t udagram-frontend ./udagram-frontend
+  - docker tag udagram-frontend ibrmostafa/udagram-frontend:v1
+  - docker build -t reverseproxy ./udagram-reverseproxy
+  - docker tag reverseproxy ibrmostafa/reverseproxy:v1
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push  rofaeilashaiaa/udagram-reverse-proxy:latest
-  - docker push  rofaeilashaiaa/udagram-frontend:latest
-  - docker push  rofaeilashaiaa/udagram-users-microservice:latest
+  - docker push ibrmostafa/udagram-api-feed:v1
+  - docker push ibrmostafa/udagram-api-user:v1
+  - docker push ibrmostafa/udagram-frontend:v1
+  - docker push ibrmostafa/reverseproxy:v1
   - docker push  rofaeilashaiaa/udagram-feed-microservice:latest
